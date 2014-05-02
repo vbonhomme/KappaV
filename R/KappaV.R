@@ -11,25 +11,25 @@
 #' standard deviation and also returns the confusion matrix calculated 
 #' between two vectorial landscapes.
 #' @export KappaV
-#' @param shp1.path character. The path to the first shape file.
-#' @param shp2.path character. The path to the second shape file.
-#' @param shp1.fieldID character. The column name in the .dbf file 
+#' @param shp1.path \code{character}. The path to the first shape file.
+#' @param shp2.path \code{character}. The path to the second shape file.
+#' @param shp1.fieldID \code{character}. The column name in the .dbf file 
 #' to indicate the polygons IDs.
-#' @param shp2.fieldID character. The column name in the .dbf file 
+#' @param shp2.fieldID \code{character}. The column name in the .dbf file 
 #' to indicate the polygons IDs.
-#' @param shp1.fieldOS character. The column name in the .dbf file 
+#' @param shp1.fieldOS \code{character}. The column name in the .dbf file 
 #' to indicate the nominal variable of interest.
-#' @param shp2.fieldOS character. The column name in the .dbf file
+#' @param shp2.fieldOS \code{character}. The column name in the .dbf file
 #'  to indicate the nominal variable of interest.
-#' @param plot logical. Whether to plot the two landscapes.
+#' @param plot \code{logical}. Whether to plot the two landscapes.
 #' @details If not specified the default parameters are
 #'  \code{shp1.fieldID = "ID"}, \code{shp2.fieldID = shp1.fieldID}, 
 #'  \code{shp1.fieldOS = "OS"},\code{shp2.fieldOS = shp1.fieldOS} 
 #'  and \code{plot = FALSE}
 #' @return A list with two components:
 #' \code{confusion.matrix}: the confusion matrix with the corresponding areas.
-#' and \code{kappa.v}: a numeric with two values: Kappa (the value of 
-#' vectorial Kappa) and Kappa.sd (the associated standard deviation)
+#' and \code{$kappa.v}: a numeric with two values: \code{$Kappa} (the value of 
+#' vectorial Kappa) and \code{$Kappa.sd }(the associated standard deviation)
 #' @references Paper submitted.
 #' @seealso \link{Kappa} in the \code{PresenceAbsence} package that 
 #' handles the Kappa and its SD calculation from the confusion matrix.
@@ -81,11 +81,15 @@ KappaV <-
     for (j in seq(along=ov[[i]])) {
       yj     <- SpatialPolygons(list(shp2@polygons[[ov[[i]][j]]]))
       pj     <- as(yj, "gpc.poly")
+
+#    }}}
+#     
       # if they intersect, we calculate the inter area and fill the matrix accordingly
-      if (gOverlaps(xi, yj)) {
-        int.ij <- area.poly(intersect(pi, pj))
+       if (gOverlaps(xi, yj)) {
+         x <- gIntersection(Q$xi, Q$yj)
+         int.ij <- x@polygons[[1]]@area
         ri <- which(shp1.lev == shp1@data[shp1@data[ , shp1.fieldID2]==i, shp1.fieldOS])
-        ci <- which(shp2.lev == shp2@data[shp2@data[ ,shp2.fieldID2]==ov[[i]][j], shp2.fieldOS])
+        ci <- which(shp2.lev == shp2@data[shp2@data[ , shp2.fieldID2]==ov[[i]][j], shp2.fieldOS])
         res[ri, ci] <- res[ri, ci] + int.ij
       }
     }
@@ -107,11 +111,11 @@ KappaV <-
 #' among other things.
 #' 
 #' @references Paper submitted.
-#' @import gpclib
-#' @import maptools
-#' @import sp
-#' @import rgeos
-#' @import PresenceAbsence
+#' @importFrom rgeos gOverlaps
+#' @importFrom gpclib area.poly
+#' @importFrom maptools readShapeSpatial
+#' @importFrom sp SpatialPolygons
+#' @importFrom PresenceAbsence Kappa
 #' @docType package
 #' @name KappaV
 #' @keywords Abtract

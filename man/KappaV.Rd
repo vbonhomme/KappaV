@@ -9,32 +9,35 @@ KappaV(shp1.path, shp2.path, shp1.fieldID = "ID",
   shp2.fieldOS = shp1.fieldOS, plot = FALSE)
 }
 \arguments{
-  \item{shp1.path}{character. The path to the first shape
-  file.}
+  \item{shp1.path}{\code{character}. The path to the first
+  shape file.}
 
-  \item{shp2.path}{character. The path to the second shape
-  file.}
+  \item{shp2.path}{\code{character}. The path to the second
+  shape file.}
 
-  \item{shp1.fieldID}{character. The column name in the
-  .dbf file to indicate the polygons IDs.}
+  \item{shp1.fieldID}{\code{character}. The column name in
+  the .dbf file to indicate the polygons IDs.}
 
-  \item{shp2.fieldID}{character. The column name in the
-  .dbf file to indicate the polygons IDs.}
+  \item{shp2.fieldID}{\code{character}. The column name in
+  the .dbf file to indicate the polygons IDs.}
 
-  \item{shp1.fieldOS}{character. The column name in the
-  .dbf file to indicate the nominal variable of interest.}
+  \item{shp1.fieldOS}{\code{character}. The column name in
+  the .dbf file to indicate the nominal variable of
+  interest.}
 
-  \item{shp2.fieldOS}{character. The column name in the
-  .dbf file to indicate the nominal variable of interest.}
+  \item{shp2.fieldOS}{\code{character}. The column name in
+  the .dbf file to indicate the nominal variable of
+  interest.}
 
-  \item{plot}{logical. Whether to plot the two landscapes.}
+  \item{plot}{\code{logical}. Whether to plot the two
+  landscapes.}
 }
 \value{
 A list with two components: \code{confusion.matrix}: the
 confusion matrix with the corresponding areas. and
-\code{kappa.v}: a numeric with two values: Kappa (the value
-of vectorial Kappa) and Kappa.sd (the associated standard
-deviation)
+\code{$kappa.v}: a numeric with two values: \code{$Kappa}
+(the value of vectorial Kappa) and \code{$Kappa.sd }(the
+associated standard deviation)
 }
 \description{
 This function calculates the vectorial Kappa, the

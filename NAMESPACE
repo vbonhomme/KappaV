@@ -1,0 +1,6 @@
+export(KappaV)
+import(PresenceAbsence)
+import(gpclib)
+import(maptools)
+import(rgeos)
+import(sp)

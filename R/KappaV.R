@@ -36,67 +36,64 @@
 #' 
 #' Have a look to the package's vignette: 
 #' \url{http://www.vincentbonhomme.fr/KappaV}
+#' @examples
+#' # Have a look to package's vignette above.
 KappaV <-
   function(shp1.path, shp2.path,
            shp1.fieldID = "ID", shp2.fieldID = shp1.fieldID,
            shp1.fieldOS = "OS", shp2.fieldOS = shp1.fieldOS, plot = FALSE) {
-  #we import the shp files
-  shp1       <- readShapeSpatial(shp1.path)
-  shp2       <- readShapeSpatial(shp2.path)
-  
-  # we create the list of poly(shp1) overlapping those of the shp2
-  ov <- over(shp1, shp2, returnList=TRUE)
-  
-  # we retrieve the OS levels in the two shp files
-  shp1.lev <- sort(unique(shp1@data[, shp1.fieldOS]))
-  shp2.lev <- sort(unique(shp2@data[, shp2.fieldOS]))
-  
-  # if required, we plot the landscapes side by side and restore the graphical window
-  if (plot) {
-    layout(matrix(1:2, ncol=2))
-    plot(shp1, col=topo.colors(length(unique(shp1@data[, shp1.fieldOS])))[shp1@data[, shp1.fieldOS]+1])
-    plot(shp2, col=topo.colors(length(unique(shp2@data[, shp1.fieldOS])))[shp2@data[, shp2.fieldOS]+1])
-    layout(matrix(1))}
-  
-  crn <- unique(c(shp1.lev, shp2.lev))
-  # we prepare the confusion matrix
-  res <- matrix(0, nrow=length(crn), ncol=length(crn),
-                dimnames=list(crn, crn))
-  
-  # we retrieve the nb of polygons in the two landscapes
-  n1 <- length(shp1@polygons)
-  n2 <- length(shp2@polygons)
-  
-  # we add another column to data 
-  shp1.fieldID2 <- paste0(shp1.fieldID, "2")
-  shp2.fieldID2 <- paste0(shp1.fieldID, "2")
-  shp1@data[ , shp1.fieldID2] <- 1:n1
-  shp2@data[ , shp2.fieldID2] <- 1:n2
-  
-  # we loop from every polygon on the first landscape
-  for (i in 1:n1) {
-    xi <- SpatialPolygons(list(shp1@polygons[[i]]))
-    pi <- as(xi, "gpc.poly")
-    # on those of the second landscapes
-    for (j in seq(along=ov[[i]])) {
-      yj     <- SpatialPolygons(list(shp2@polygons[[ov[[i]][j]]]))
-      pj     <- as(yj, "gpc.poly")
-
-#    }}}
-#     
-      # if they intersect, we calculate the inter area and fill the matrix accordingly
-       if (gOverlaps(xi, yj)) {
-         x <- gIntersection(Q$xi, Q$yj)
-         int.ij <- x@polygons[[1]]@area
+    #we import the shp files
+    shp1       <- readShapeSpatial(shp1.path)
+    shp2       <- readShapeSpatial(shp2.path)
+    
+    # we create the list of poly(shp1) overlapping those of the shp2
+    ov <- over(shp1, shp2, returnList=TRUE)
+    
+    # we retrieve the OS levels in the two shp files
+    shp1.lev <- sort(unique(shp1@data[, shp1.fieldOS]))
+    shp2.lev <- sort(unique(shp2@data[, shp2.fieldOS]))
+    
+    # if required, we plot the landscapes side by side and restore the graphical window
+    if (plot) {
+      layout(matrix(1:2, ncol=2))
+      plot(shp1, col=terrain.colors(length(unique(shp1@data[, shp1.fieldOS])))[shp1@data[, shp1.fieldOS]+1])
+      plot(shp2, col=terrain.colors(length(unique(shp2@data[, shp1.fieldOS])))[shp2@data[, shp2.fieldOS]+1])
+      layout(matrix(1))}
+    
+    # full list of OS
+    crn <- unique(c(shp1.lev, shp2.lev))
+    
+    # we prepare the confusion matrix
+    res <- matrix(0, nrow=length(crn), ncol=length(crn),
+                  dimnames=list(crn, crn))
+    
+    # we retrieve the nb of polygons in the two landscapes
+    n1 <- length(shp1@polygons)
+    n2 <- length(shp2@polygons)
+    
+    # we add another column to data 
+    shp1.fieldID2 <- paste0(shp1.fieldID, "2")
+    shp2.fieldID2 <- paste0(shp2.fieldID, "2")
+    shp1@data[, shp1.fieldID2] <- 1:n1
+    shp2@data[, shp2.fieldID2] <- 1:n2
+    
+    # we loop from every polygon on the first landscape
+    for (i in 1:n1) {
+      xi <- SpatialPolygons(list(shp1@polygons[[i]]))
+      xi <- as(xi, "gpc.poly")
+      # on those of the second landscapes
+      for (j in seq(along=ov[[i]])) {
+        yj     <- SpatialPolygons(list(shp2@polygons[[ov[[i]][j]]]))
+        yj     <- as(yj, "gpc.poly")
+        int.ij <- area.poly(intersect(xi, yj))
         ri <- which(shp1.lev == shp1@data[shp1@data[ , shp1.fieldID2]==i, shp1.fieldOS])
         ci <- which(shp2.lev == shp2@data[shp2@data[ , shp2.fieldID2]==ov[[i]][j], shp2.fieldOS])
         res[ri, ci] <- res[ri, ci] + int.ij
       }
     }
-  }
-  print(res)
-  # we finally return both the matrix and the Kappa
-  return(list(confusion.matrix=res, kappa.v=Kappa(res)))}
+    #print(res)
+    # we finally return both the matrix and the Kappa
+    return(list(confusion.matrix=res, kappa.v=Kappa(res)))}
 
 #' KappaV
 #' 
@@ -111,8 +108,7 @@ KappaV <-
 #' among other things.
 #' 
 #' @references Paper submitted.
-#' @importFrom rgeos gOverlaps
-#' @importFrom gpclib area.poly
+#' @importFrom rgeos area.poly
 #' @importFrom maptools readShapeSpatial
 #' @importFrom sp SpatialPolygons
 #' @importFrom PresenceAbsence Kappa

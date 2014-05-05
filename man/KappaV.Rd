@@ -55,6 +55,9 @@ shp1.fieldID}, \code{shp1.fieldOS =
 "OS"},\code{shp2.fieldOS = shp1.fieldOS} and \code{plot =
 FALSE}
 }
+\examples{
+# Have a look to package's vignette above.
+}
 \references{
 Paper submitted.
 

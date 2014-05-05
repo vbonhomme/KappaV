@@ -1,6 +1,5 @@
 export(KappaV)
 importFrom(PresenceAbsence,Kappa)
-importFrom(gpclib,area.poly)
 importFrom(maptools,readShapeSpatial)
-importFrom(rgeos,gOverlaps)
+importFrom(rgeos,area.poly)
 importFrom(sp,SpatialPolygons)

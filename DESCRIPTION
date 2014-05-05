@@ -2,8 +2,8 @@ Package: KappaV
 Type: Package
 Title: Calculates "vectorial Kappa", an index of congruence between patchy
     mosaics.
-Version: 0.24
-Date: 2014-01-23
+Version: 0.3
+Date: 2014-05-05
 Author: Vincent Bonhomme
 Maintainer: Vincent Bonhomme <bonhomme.vincent@gmail.com>
 Description: this package allows to quantify the congruence between two patchy
@@ -15,9 +15,7 @@ Description: this package allows to quantify the congruence between two patchy
 License: GPL(>=2)
 URL: http://www.vincentbonhomme.fr/KappaV
 Depends:
-    gpclib,
-    maptools,
-    sp,
-    rgeos,
     PresenceAbsence,
-    R(>= 2.15.0)
+    maptools,
+    rgeos,
+    sp

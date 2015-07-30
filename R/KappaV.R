@@ -22,6 +22,7 @@
 #' @param shp2.fieldOS \code{character}. The column name in the .dbf file
 #'  to indicate the nominal variable of interest.
 #' @param plot \code{logical}. Whether to plot the two landscapes.
+#' @param progressBar \code{logical}. Whether to display a progress bar during calculations.
 #' @details If not specified the default parameters are
 #'  \code{shp1.fieldID = "ID"}, \code{shp2.fieldID = shp1.fieldID}, 
 #'  \code{shp1.fieldOS = "OS"},\code{shp2.fieldOS = shp1.fieldOS} 
@@ -41,7 +42,19 @@
 KappaV <-
   function(shp1.path, shp2.path,
            shp1.fieldID = "ID", shp2.fieldID = shp1.fieldID,
-           shp1.fieldOS = "OS", shp2.fieldOS = shp1.fieldOS, plot = FALSE) {
+           shp1.fieldOS = "OS", shp2.fieldOS = shp1.fieldOS,
+           plot = FALSE, progressBar=TRUE) {
+    shp1.path="~/Desktop/shp/voro.shp"
+    shp2.path="~/Desktop/shp/voro2.shp"
+    
+    shp1.fieldID = "ID"
+    shp2.fieldID = "ID"
+    
+    #   shp1.fieldOS = "cn"
+    #   shp2.fieldOS = "cnp"
+    shp1.fieldOS = "OS"
+    shp2.fieldOS = "OS"
+    
     #we import the shp files
     shp1       <- readShapeSpatial(shp1.path)
     shp2       <- readShapeSpatial(shp2.path)
@@ -78,17 +91,25 @@ KappaV <-
     shp2@data[, shp2.fieldID2] <- 1:n2
     
     # we loop from every polygon on the first landscape
+    if (progressBar) {
+      pb <- txtProgressBar(1, n1)
+    }
+    
     for (i in 1:n1) {
       xi <- SpatialPolygons(list(shp1@polygons[[i]]))
       xi <- as(xi, "gpc.poly")
+      ids <- as.numeric(rownames(ov[[i]]))
       # on those of the second landscapes
-      for (j in seq(along=ov[[i]])) {
-        yj     <- SpatialPolygons(list(shp2@polygons[[ov[[i]][j]]]))
+      for (j in seq(along=1:nrow(ov[[i]]))) {
+        yj     <- SpatialPolygons(list(shp2@polygons[[ids[j]+1]]))
         yj     <- as(yj, "gpc.poly")
         int.ij <- area.poly(intersect(xi, yj))
         ri <- which(shp1.lev == shp1@data[shp1@data[ , shp1.fieldID2]==i, shp1.fieldOS])
-        ci <- which(shp2.lev == shp2@data[shp2@data[ , shp2.fieldID2]==ov[[i]][j], shp2.fieldOS])
+        ci <- which(shp2.lev == shp2@data[shp2@data[ , shp2.fieldID2]==ids[j]+1, shp2.fieldOS])
         res[ri, ci] <- res[ri, ci] + int.ij
+      }
+      if (progressBar) {
+        setTxtProgressBar(pb, i)
       }
     }
     #print(res)
@@ -110,7 +131,7 @@ KappaV <-
 #' @references Paper submitted.
 #' @importFrom rgeos area.poly
 #' @importFrom maptools readShapeSpatial
-#' @importFrom sp SpatialPolygons
+#' @importFrom sp SpatialPolygons over
 #' @importFrom PresenceAbsence Kappa
 #' @docType package
 #' @name KappaV

@@ -1,12 +1,11 @@
 Package: KappaV
 Type: Package
-Title: Calculates "vectorial Kappa", an index of congruence between patchy
-    mosaics.
-Version: 0.3
-Date: 2014-05-05
+Title: Calculates "Vectorial Kappa", an Index of Congruence Between Patchy Mosaics
+Version: 0.3.1
+Date: 2015-07-30
 Author: Vincent Bonhomme
 Maintainer: Vincent Bonhomme <bonhomme.vincent@gmail.com>
-Description: this package allows to quantify the congruence between two patchy
+Description: Calculates the congruence between two patchy
     mosaics or landscapes. This "vectorial Kappa" approach extends the
     principle of Cohen's Kappa index by calculating areas of intersected
     patches between two mosaics rather than agreement between pixels. It

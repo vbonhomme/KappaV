@@ -57,7 +57,7 @@ KappaV <-
     if (plot) {
       layout(matrix(1:2, ncol=2))
       plot(shp1, col=terrain.colors(length(unique(shp1@data[, shp1.fieldOS])))[shp1@data[, shp1.fieldOS]+1])
-      plot(shp2, col=terrain.colors(length(unique(shp2@data[, shp1.fieldOS])))[shp2@data[, shp2.fieldOS]+1])
+      plot(shp2, col=terrain.colors(length(unique(shp2@data[, shp2.fieldOS])))[shp2@data[, shp2.fieldOS]+1])
       layout(matrix(1))}
     
     # full list of OS
